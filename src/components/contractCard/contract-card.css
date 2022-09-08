@@ -1,0 +1,26 @@
+.card{
+    box-sizing: border-box;
+    display: inline-block;
+    margin-top: 0.5rem;
+    margin-left: 0.5rem;
+
+    position: relative;
+    width: 1900px;
+    height: 280px;
+    left: 10px;
+    top: 322px;
+    
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.item{
+    
+    font-family: 'Gotham Pro';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 125%;
+    
+    color: #333333;    
+}
