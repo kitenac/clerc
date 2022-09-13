@@ -1,23 +1,33 @@
-import React from 'react'
-import { connect } from 'react-redux'
+import React, { useState } from 'react'
+import { useSelector } from 'react-redux'
+import styled from 'styled-components'
 import ContractCard from '../contractCard'
+import Header from '../head'
 
-import Head from '../head/head'
+const ContractsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: center;
+  row-gap: 5px;
 
-const ContractsPage = ({contractsPageData}) => {
+`
 
+
+const ContractsPage = () => {
+
+    const contractsPageData = useSelector((state) => state.app_reducer.contractsPageData)
     const Contracts = contractsPageData.map( (contract) => {
                       return  <ContractCard 
+                                  key={contract.id}
                                   info={contract} 
                                   onCardSelected={ (id)=>{console.log('chosen contract with id:', id)} }/> })
 
-    return <div>
-             <Head/>
+    return <ContractsContainer>
+             <Header/>
              {Contracts}
-           </div> 
+            </ContractsContainer>
 }
 
-
-const mapStateToProps = (state) => ({contractsPageData : state.contractsPageData})
-
-export default connect(mapStateToProps)(ContractsPage)
+export default ContractsPage

@@ -13,7 +13,7 @@ const Title = styled.text`
 `
 
 
-const Head = () =>{
+const Header = () =>{
     return <div>
             <Title> clerc </Title>
             <Line/>
@@ -21,4 +21,4 @@ const Head = () =>{
 }
 
 
-export default Head
+export default Header

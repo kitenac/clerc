@@ -4,8 +4,6 @@
 
 import React from 'react'
 import styled from 'styled-components'
-import './contract-card.css'
-
 
 
 const AnotFont = styled.div`
@@ -31,14 +29,28 @@ const Item = styled.div`
   color: #333333;   
 `
 
+const Card = styled.li`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  row-gap: 8px;
 
+  box-sizing: border-box;
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
 
-const infoPair = (label, item) =>{
-  return <div>
-            <AnotFont> {label}: </AnotFont>
-            <Item> {item ? item : ' - '} </Item>
-          </div> 
-}
+  width: 97vw;
+
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+`
+
+const Pair = styled.div`
+  margin-left: 0.6rem;
+  margin-right: 0.6rem;
+  margin-top: 0.7rem;
+  margin-bottom:0.5rem;
+`
 
 
 // ex: 2018-12-28 00:00:00.000000 ---> 28.12.18
@@ -82,32 +94,23 @@ const ContractCard = (props) => {
 
     const items = Object.values(contracts).map((contract) => {
                   const [anot, item] = contract 
-                  return (
-                    <Item>
-                        {infoPair(anot, item)}
-                    </Item>  )
+                  return <Pair>
+                            <AnotFont> {anot}: </AnotFont>
+                            <Item> {item ? item : ' - '} </Item>
+                          </Pair> 
     })
   
+    const Head = items[0]
+    const Body = items.slice(1,)
+
     return (
-      <li className='card' key={id} onClick={(id) => onCardSelected(id)}>
-        {items}
-      </li>
+      <Card key={id} onClick={(id) => onCardSelected(id)}>
+        {items}    
+      </Card>
     )
   }
 
-  
-// can`t aply styles \_(._.)_/
-const StyledCard = styled(ContractCard)`
-  box-sizing: border-box;
-  position: absolute;
-  width: 1900px;
-  height: 200px;
-  left: 10px;
-  top: 322px;
 
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-`
 
 
 export default ContractCard

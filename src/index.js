@@ -1,22 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { createStore, applyMiddleware, compose } from 'redux';
 import { Provider } from 'react-redux';     // already written HOC to simplify work between react and redux
-import reducer from './reducers';
 import App from './components/app';
-import thunk from 'redux-thunk';
-
-// init new redux-store with already created reducer
 
 
-// to pass enhancer and applyMiddleWare and ... - manualy we oughta create single function
-const composedParams = compose(  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
-                                 applyMiddleware(thunk))
 
-const store = createStore(
-  reducer,
-  composedParams
-  );  
+import { configureStore } from '@reduxjs/toolkit'
+import AppReducer from './slices'
+
+
+
+// app_reducer - will be ~ identifier of this store:  UseSelector(state.app_reducer.propName)
+const store = configureStore({
+  reducer: {
+    app_reducer: AppReducer,
+  },
+})
+
 
   /* 
     2-nd param - for redux plugin
@@ -24,7 +24,10 @@ const store = createStore(
   */       
 ReactDOM.render(
   <Provider store={store}>
-    <App/>
+    <App/> 
   </Provider>,
   document.getElementById('root'));
+
+// gives state outside react-components( ex: fetching function)
+export default store
 
