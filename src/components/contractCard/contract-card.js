@@ -4,7 +4,10 @@
 
 import React from 'react'
 import styled from 'styled-components'
-
+import { useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { add_charecteristic } from '../../slices'
+import { getContractsInfo } from '../../services/request-utils'
 
 const AnotFont = styled.div`
   font-family: cursive;
@@ -16,9 +19,9 @@ const AnotFont = styled.div`
   color: #579BE3;
 `
 
-
+ 
 const Item = styled.div`
-  font-family: 'Gotham Pro';
+  font-family: cursive;
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
@@ -59,12 +62,32 @@ const transformDateFormat = (date) =>{
   return `${parts[2]}.${parts[1]}.${parts[0].slice(2)}г.` 
 }
 
+const transformPriceFormat = (price) =>{
+  if (!price) 
+      return  ' — '
+
+  // inserting spacebar after each 3 digets of price number. ps cycle may be optimized 
+  let i = price.length % 3
+  let spacedPrice = price.slice(0, i) + ' '
+  
+  for (; i < price.length-3; i+=3)
+      spacedPrice += price.slice(i, i+3) + ' '        // we don`t want spacing after '.' sign
+  
+  // handle last 3 chars(may be 3 digets or '.' and 2 digets)
+  if (price.indexOf('.') !== -1) spacedPrice = spacedPrice.trimEnd()  // we don`t need spacing before fraction part
+
+  return spacedPrice + price.slice(i,).replace('.', ',') + ' ₽' 
+}
 
 
 const ContractCard = (props) => {
 
-    const { info, onCardSelected} = props
+    const redirect = useNavigate()
+    const dispatch = useDispatch()
 
+    const apiKey = useSelector((state) => state.app_reducer.sessionData.apiToken)
+
+    const { info, onCardSelected} = props
     const {
       id,
       name,
@@ -75,16 +98,21 @@ const ContractCard = (props) => {
       deadline,
       note,
       program_name} = info
+    
 
-    const Date = transformDateFormat(date.date)
-    const Deadline = transformDateFormat(deadline.date)
+    let Date, Deadline, Price
 
+    date !== null ? Date = transformDateFormat(date.date) : Date = ' — '
+    deadline !== null ? Deadline = transformDateFormat(deadline.date) : Deadline = ' — '
+    
+    Price = transformPriceFormat(price)
+    
 
     const contracts = [['Наименование', name],    
                        ['Номер гос. контракта', number],
                        ['Дата подписания контракта', Date],
                        ['Окончание выполнения работ', Deadline],
-                       ['Цена контракта',  price],
+                       ['Цена контракта',  Price],
                        ['Наименование программы', program_name],
                        ['Контрагент', counterpart],
                        ['Примечание', note]
@@ -96,15 +124,17 @@ const ContractCard = (props) => {
                   const [anot, item] = contract 
                   return <Pair>
                             <AnotFont> {anot}: </AnotFont>
-                            <Item> {item ? item : ' - '} </Item>
+                            <Item> { (!item) ?  ' — ' : item } </Item>
                           </Pair> 
     })
   
-    const Head = items[0]
-    const Body = items.slice(1,)
 
     return (
-      <Card key={id} onClick={(id) => onCardSelected(id)}>
+      <Card key={id} onClick ={ async function(event) { 
+            event.preventDefault()
+            const charac = await getContractsInfo(apiKey, id, 'shipProperties')
+            dispatch(add_charecteristic(charac))
+            redirect(`/contracts/${id}/ship-properties`)} }>
         {items}    
       </Card>
     )

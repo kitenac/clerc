@@ -1,5 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
+import table_cols from './tables-columns'
 
+/*
 const dummy_response = {
     contracts :
  {
@@ -33,9 +35,13 @@ const dummy_response = {
 }
 
 const default_contracts = dummy_response.contracts.data
+*/
 
 const initialState = {
-  sessionData: { apiToken: '' }, 
+  sessionData: { 
+    apiToken: '',
+    isLoginned: false
+  }, 
 
   loginFormData:{
       username: '',
@@ -44,14 +50,33 @@ const initialState = {
       client_secret: '',
       grant_type: ''     },
 
-  contractsPageData: default_contracts      // TODO
+  contractsPageData: [],
+
+
+  contractDetails:{
+      table_cols,
+      charecteristic: [],
+      bank_garanty: [],
+      limits: [],
+      contract_objects: [],
+      payment_stages: [],
+      key_events: [],
+      claim_works: [],
+      judical_works: [], 
+      cash_executions: [],
+      familiarization: []
+  }
+
 }
 
+// TODO: maby make slice for each substate
 const AppSlice = createSlice({
     name: 'App',
     initialState,
     reducers: {
         // !!!!!!! Не забывай про {} в reducer`ах тк они не должны возвращать значение, иначе никакого эффекта !!!!!!!!!!!!!!!!!!!!!!
+        
+        // loginFormData:
         input_username: (state, action) =>   {state.loginFormData.username = action.payload},
         input_password: (state, action) =>   {state.loginFormData.password = action.payload},
         input_rest: (state, action)     =>   {
@@ -62,8 +87,27 @@ const AppSlice = createSlice({
           state.loginFormData.grant_type = grant_type
         },
 
-        add_contracts: (state, action)  =>   {state.contractsPageData.contracts = action.payload},
-        update_token:  (state, action)  =>   {state.sessionData.apiToken = action.payload}
+        // contractsPageData:
+        add_contracts: (state, action)  =>   {state.contractsPageData.push(...action.payload)},
+
+        // contractDetails:
+        add_charecteristic:   (state, action) => {state.contractDetails.charecteristic.push(...action.payload)},
+        add_bank_garanty:     (state, action) => {state.contractDetails.bank_garanty.push(...action.payload)},
+        add_limits:           (state, action) => {state.contractDetails.limits.push(...action.payload)},
+        add_contract_objects: (state, action) => {state.contractDetails.contract_objects.push(...action.payload)},
+        add_payment_stages:   (state, action) => {state.contractDetails.payment_stages.push(...action.payload)},
+        add_key_events:       (state, action) => {state.contractDetails.key_events.push(...action.payload)},
+        add_claim_works:      (state, action) => {state.contractDetails.claim_works.push(...action.payload)},
+        add_judical_works:    (state, action) => {state.contractDetails.judical_works.push(...action.payload)},
+        add_cash_executions:  (state, action) => {state.contractDetails.cash_executions.push(...action.payload)},
+        add_familiarization:  (state, action) => {state.contractDetails.familiarization.push(...action.payload)},
+
+        // sessionData:
+        update_token:  (state, action)  =>   {state.sessionData.apiToken = action.payload},
+        
+        // ! Temporary measure: TODO: make some function to check if token is valid
+        //   => if it`s true: toggle loggined state  (with rights of authenticated user)
+        toggle_logined:(state, action)  =>   {state.sessionData.isLoginned = ! state.sessionData.isLoginned}
 
     }
 })
@@ -73,8 +117,23 @@ const AppSlice = createSlice({
 export const { input_username, 
                input_password, 
                input_rest,
+
                add_contracts, 
-               update_token } = AppSlice.actions
+
+               update_token,
+
+               toggle_logined,
+              
+               add_charecteristic,
+               add_bank_garanty,
+               add_limits,
+               add_contract_objects,
+               add_payment_stages,
+               add_key_events,
+               add_claim_works,
+               add_judical_works, 
+               add_cash_executions,
+               add_familiarization  } = AppSlice.actions
 
 // needed in store
 export default AppSlice.reducer

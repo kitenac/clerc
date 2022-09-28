@@ -1,33 +1,45 @@
-import React, { useState } from 'react'
+import React, { Component, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import ContractCard from '../contractCard'
 import Header from '../head'
+import { getContractsInfo } from '../../services/request-utils'
 
-const ContractsContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-content: center;
-  row-gap: 5px;
+import { ColumnContainer, RowContainer } from '../pages/login-page'
 
-`
 
 
 const ContractsPage = () => {
 
-    const contractsPageData = useSelector((state) => state.app_reducer.contractsPageData)
+    const state = useSelector((state) => state.app_reducer)
+    const {contractsPageData, sessionData} = state
+
+    const redirect = useNavigate()
+
+    // if (!sessionData.isLoginned) return <Navigate to="/login" /> 
+
+    //const contractsPageData = useSelector((state) => state.app_reducer.contractsPageData)
     const Contracts = contractsPageData.map( (contract) => {
                       return  <ContractCard 
                                   key={contract.id}
-                                  info={contract} 
-                                  onCardSelected={ (id)=>{console.log('chosen contract with id:', id)} }/> })
+                                  info={contract}/> })
 
-    return <ContractsContainer>
-             <Header/>
-             {Contracts}
-            </ContractsContainer>
+    const Top = Contracts[0]
+    const Body = Contracts.slice(1,Contracts.length)
+    const Bottom = Contracts[Contracts.length]
+
+    return<div>
+            <Header/>
+            <ColumnContainer style={{paddingInlineStart: '5px', gap: '5px', textAlign: 'start'}}>
+              {Top}
+             
+              {Body}
+             
+              {Bottom}
+            </ColumnContainer>
+          </div>
 }
 
 export default ContractsPage

@@ -1,32 +1,47 @@
 import React from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { connect, useSelector, useDispatch } from 'react-redux'
+
 import { 
          input_username,
          input_password, 
          input_rest,
-         update_token, 
+         update_token,
+         toggle_logined, 
          add_contracts,
          }    from '../../slices';
 
 import {login, getApiKey, getContracts} from '../../services';
+import state from '../../index'
 
 import styled from 'styled-components'
-import { connect, useSelector, useDispatch } from 'react-redux'
 
 import {waves, waveLine, loginPic} from '../../images'
 
 // Maby bad practice, but I know no way except this to pass state into non-react function
-import state from '../../index'
+
 
 
 // container class to wrap inputs on a login page
-const LoginContainer = styled.div`
+const ColumnContainer = styled.div`
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
   justify-content: center;
   align-content: center;
   row-gap: 20px;
+  text-align: center;
 `
+
+const RowContainer = styled.div`
+    align-items:center;
+    
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+`
+
+
 
 
 const InputLogin = styled.input`
@@ -76,21 +91,20 @@ const Background = styled.div`
 
 
 
-
 // "admin@ship.ru"   "secret2"
-
 
 const LoginPage = () => {
     
     const dispatch = useDispatch()
-    //const state = useSelector((state) => state.app_reducer.loginFormData) 
-    
-    //const token = useSelector((state) => state.app_reducer.sessionData.apiToken)  // about app_reducer - look top index.js
-    //console.log('\n\n Is there token accessable?', token ,'\n\n')
+    const location = useLocation()
+    const redirect = useNavigate()
+
+    const { isLoginned } = useSelector((state) => state.app_reducer.sessionData)     
+    if (!isLoginned) redirect('/login') 
 
     return <Background Pic={waves}>
     
-      <LoginContainer>
+      <ColumnContainer>
 
         <Title> 
           clerc 
@@ -99,19 +113,16 @@ const LoginPage = () => {
 
 
         <form>
-        <LoginContainer>     
+        <ColumnContainer>     
             
             <div>
-              
               <img src={loginPic} style={{alignSelf: 'center'}}/>
                 <InputLogin
                 placeholder='Логин'
                 onChange={ (event) => {
                   event.preventDefault()
                   dispatch(input_username(event.target.value))
-                  }}/>
-              
-              
+                  }}/>              
             </div>
 
             <InputLogin 
@@ -122,57 +133,44 @@ const LoginPage = () => {
                 }}/>
 
             <SubmitButton
+              // TODO: write function from onClick as separate function
               onClick={ async function (event){   // async - only way to use await 
                           event.preventDefault()
                           // **** temporary measure ****
-                          // TODO: see docs to know: how to get this poles to different users 
+                          // TODO: look at oAuth 2.0 => know id and secret
                           dispatch(input_rest({ 
                              client_id: '1',
                              client_secret: 'c75IGwuqkjrO1RWCE4Ntn4zqpQdpgnEO2wGT9iMT',
                              grant_type: 'password'}))
                           
-
-                          // *** После диспатча сверху состояние-то поменялось, а доступа к нему нет доступа ***
-                          //const state = useSelector((state) => state.app_reducer.loginFormData) // state has been updated - so call it here
-                          
-
                           const loginFormData = state.getState().app_reducer.loginFormData
-                          console.log('formData from state:', loginFormData)
 
-                          const response = await login(loginFormData)
-                          console.log('got response on login:', response)
-                          const token = getApiKey(response)
+                          // TODO: handle error here by catching: try {login()} catch(err) { *set some state in store* } 
+                          // then return <Navigate to="/contracts" /> from LoginPage
+                          const response = await login(loginFormData)  
+                          if (response.status >= 200 && response.status < 300){
+                              dispatch(toggle_logined())
+                              redirect('/contracts')    
+                          }
+
+                          const responseData = response.data
+                          const token = getApiKey(responseData)
                           const contracts = await getContracts(token)
-                          update_token(token)
-                          add_contracts(contracts)
                           
-              }}>
+                          dispatch(update_token(token))
+                          dispatch(add_contracts(contracts))  }}>
                 Войти
             </SubmitButton>
 
-        </LoginContainer>
+        </ColumnContainer>
         </form>
 
-      </LoginContainer>
+      </ColumnContainer>
             
     </Background>
   
 }
 
 
-/*
-const mapStateToProps = (state) => (state.app_reducer)
-
-// wrapping actions into dispatch
-const mapDispatchToProps = {
-  input_username,
-  input_password, 
-  input_rest,
-  add_contracts }
-
-
-
-export default connect(mapStateToProps, )(LoginPage);
-*/
-
 export default LoginPage
+export {Title, ColumnContainer, RowContainer}
