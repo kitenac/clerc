@@ -31,14 +31,16 @@ const TableFont = styled(AnotFont)`
 
 const Row = styled(RowContainer)`
     row-gap: 50px;
-    width: 80%;
+    width: 100vw;
     text-align: left;
     border: 1px solid grey;
+    padding: 0px 10px;
 `
 
 
 const Col = styled(ColumnContainer)`
     column-gap: 50px;
+    padding: 0px 10px;
 `
 
 
