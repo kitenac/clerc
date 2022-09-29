@@ -29,18 +29,18 @@ const TableFont = styled(AnotFont)`
     color: #333333;
 `
 
+
 const Row = styled(RowContainer)`
     row-gap: 50px;
     width: 100vw;
-    text-align: left;
+    align-items: left;
+    justify-content: space-around;
     border: 1px solid grey;
-    padding: 0px 10px;
 `
 
 
 const Col = styled(ColumnContainer)`
     column-gap: 50px;
-    padding: 0px 10px;
 `
 
 
@@ -128,7 +128,10 @@ const ContractDetails = () =>{
 //    <Table table = {chosenTable}/>    
     return <div>
                 <Header/> 
+                
                 <Table table = {testTable}/>
+                
+                
            </div>
     
 }
