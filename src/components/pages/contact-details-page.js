@@ -1,7 +1,7 @@
 import { useLocation, useNavigate, Route } from 'react-router-dom';
 
 import Header from "../head"
-import { RowContainer, ColumnContainer } from "./login-page"
+import { RowContainer, ColumnContainer} from "./login-page"
 import { toCamel, getContractsInfo, toSnake } from '../../services/request-utils'
 import styled from 'styled-components'
 import { useSelector } from 'react-redux';
@@ -29,33 +29,17 @@ const TableFont = styled(AnotFont)`
     color: #333333;
 `
 
-const headRow = styled.div`
-    display: table-row;
-    padding: 5px 8px;
-    border: 1px solid grey;
+const Row = styled(RowContainer)`
+    row-gap: 50px;
     width: 80%;
-`
-
-const dataRow = styled.div`
-    display: table-row;
-    padding: 5px 8px;
-    border: 1px solid grey;
-    width: 80%;
-`
-
-const cell = styled.div`
-    float:left;    
-    display:table-column;
-`
-
-const table = styled.div`
-    display:  table;
-    border-collapse: collapse;
     text-align: left;
-    width: 100%;
+    border: 1px solid grey;
 `
 
 
+const Col = styled(ColumnContainer)`
+    column-gap: 50px;
+`
 
 
 
@@ -85,29 +69,29 @@ const Table = (props) =>{
     const {Anot, Vals} = table
 
     const Anotation = Anot.map((anot) => {
-        return <cell>
+        return <Col>
                  { (!anot.value) ?  ' — ' : anot.value } 
-               </cell>})
+               </Col>})
 
 
     // Taking needed keys from array of objects
     const Lines = Vals.map((val)=> {
-        return <dataRow> <cell>
+        return <Row> 
                 {
                     Anot.map((anot) => {
                         const key = anot.key
-                        return <TableFont> 
+                        return <Col> <TableFont> 
                                     { (!val[key]) ?  ' — ' : val[key] }
-                              </TableFont> })
+                              </TableFont> </Col> })
                 }
-                </cell> </dataRow> })
+               </Row> })
     
     // columns goes in a row
     return  <table>
-                 <headRow>  
-                    {Anotation}
-                 </headRow>   
-                 {Lines} 
+              <Row>
+                {Anotation}
+              </Row>   
+                {Lines} 
             </table>
 }
 
