@@ -18,7 +18,7 @@ const Navbar = () => {
 const AnotFont = styled.text`
     font-family: 'Gotham Pro';
     font-style: normal;
-    font-weight: 400;
+    font-weight: 550;
     font-size: 14px;
     line-height: 125%;
 
@@ -26,21 +26,26 @@ const AnotFont = styled.text`
 `
 
 const TableFont = styled(AnotFont)`
+    font-weight: 400;
     color: #333333;
 `
 
-
 const Row = styled(RowContainer)`
-    row-gap: 50px;
+    gap: 50px;
+    padding: 5px;
     width: 100vw;
-    align-items: left;
-    justify-content: space-around;
-    border: 1px solid grey;
+    justify-content: flex-start;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-top-width: 0;
+    border-right-width: 0;
+    border-left-width: 0;
 `
 
 
 const Col = styled(ColumnContainer)`
+    justify-content: flex-start;
     column-gap: 50px;
+    padding: 10px;
 `
 
 
@@ -64,16 +69,53 @@ const filter_tags = (tags, response_arr) => {
 // Anot: [{key, val}, ...]
 
 
-const Table = (props) =>{
-                    
+// le kostyl`:  
+//  Anot - array of objects with {key, value} poles
+//  key - some key, idx - index of object with such key
+const find_idx = (key, Anot) => {
+    let idx = 0
+    for (let el of Anot){
+        if (el.key === key)
+            return idx
+        idx++
+    }
+    return -1                       // if no match
+}
+
+
+const Table = (props) =>{                    
     // |values| = n*m => 2 maps
     const {table} = props
     const {Anot, Vals} = table
 
     const Anotation = Anot.map((anot) => {
-        return <Col>
-                 { (!anot.value) ?  ' — ' : anot.value } 
-               </Col>})
+        return <AnotFont>
+                    { (!anot.value) ?  ' — ' : anot.value } 
+                 </AnotFont>
+               })
+
+
+    
+    let Cols = []
+    // initing multi-dimentional(dim = Anotation.length) array - colomuns
+    for (let i=0; i<Anotation.length; ++i)
+        Cols.push( [Anotation[i]] )
+    
+    // Pushing needed keys from array of objects to columns from Cols
+    
+    for (let val of Vals) 
+        for (let [key, value] of Object.entries(val)){
+            const idx = find_idx(key, Anot)
+            
+            if (idx !== -1)
+                Cols[idx].push(
+                     <TableFont> 
+                        { (!value) ?  ' — ' : value }
+                     </TableFont>) 
+    }
+
+    // wrapping each array into column tag
+    Cols = Cols.map((col) => <Col> {col} </Col>)
 
 
     // Taking needed keys from array of objects
@@ -88,6 +130,13 @@ const Table = (props) =>{
                 }
                </Row> })
     
+
+    return <Row>
+            {Cols}
+           </Row>
+
+
+    /*
     // columns goes in a row
     return  <table>
               <Row>
@@ -95,6 +144,7 @@ const Table = (props) =>{
               </Row>   
                 {Lines} 
             </table>
+    */
 }
 
 
