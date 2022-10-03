@@ -44,8 +44,16 @@ const Row = styled(RowContainer)`
 
 const Col = styled(ColumnContainer)`
     justify-content: flex-start;
+    align-items: flex-start;
     column-gap: 50px;
     padding: 10px;
+`
+
+const Line = styled.div`
+    display: absolute;
+    box-sizing: border-box;
+    width: 80vw;
+    border: 1px solid rgba(0, 0, 0, 0.1);
 `
 
 
@@ -89,10 +97,11 @@ const Table = (props) =>{
     const {Anot, Vals} = table
 
     const Anotation = Anot.map((anot) => {
-        return <AnotFont>
-                    { (!anot.value) ?  ' — ' : anot.value } 
-                 </AnotFont>
-               })
+                            return <AnotFont>
+                                    { (!anot.value) ?  ' — ' : anot.value } 
+                                    </AnotFont>
+                               })
+                        
 
 
     
@@ -108,10 +117,9 @@ const Table = (props) =>{
             const idx = find_idx(key, Anot)
             
             if (idx !== -1)
-                Cols[idx].push(
-                     <TableFont> 
-                        { (!value) ?  ' — ' : value }
-                     </TableFont>) 
+                Cols[idx].push(<TableFont> 
+                                { (!value) ?  ' — ' : value }
+                               </TableFont>) 
     }
 
     // wrapping each array into column tag
@@ -129,13 +137,26 @@ const Table = (props) =>{
                               </TableFont> </Col> })
                 }
                </Row> })
-    
+   
+    /*
+    let Tabl = []
+    for (let i = 0; i < Vals.length; ++i){
+        let Line = []
+        for (let j = 0; j < Cols.length; ++j)
+            Line.push(Cols[i][j])
+        Tabl.push(<Row> {Line} </Row>)
+    }
+    */
 
-    return <Row>
-            {Cols}
-           </Row>
+    return <div> 
+                Normal cols:
+            <Row>
+              {Cols}  
+            </Row>
 
-
+                Normal lines: 
+              {Lines}
+            </div> 
     /*
     // columns goes in a row
     return  <table>
@@ -180,7 +201,6 @@ const ContractDetails = () =>{
                 <Header/> 
                 
                 <Table table = {testTable}/>
-                
                 
            </div>
     
