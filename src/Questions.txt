@@ -53,6 +53,11 @@ TODO:
           padding: 1em;
         }
 
+
+   [!!!] ResponsiveTable - used to add scroll-bar near large table
+         - meant to be used in each page(contracts, contract details, ...)
+
+
  [?!] почему-то useApi(), использующее  AxiosInstance baseurl = http://server.clerc.ru/api/v2.0
       ведёт себя по разному: 
       для getContracts - baseurl "сам" подставляется в url
