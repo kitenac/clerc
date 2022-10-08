@@ -16,7 +16,7 @@ import state from '../../index'
 
 import styled from 'styled-components'
 
-import {waves, waveLine, loginPic} from '../../images'
+import {waves, waveLine, loginPic, lock} from '../../images'
 
 // Maby bad practice, but I know no way except this to pass state into non-react function
 
@@ -44,7 +44,9 @@ const RowContainer = styled.div`
 
 
 
-const InputLogin = styled.input`
+
+const InputBox = styled(RowContainer)`
+  gap: 10px;
   width: 342px;
   height: 50px;
 
@@ -53,6 +55,15 @@ const InputLogin = styled.input`
   border: 0;
 `
 
+const Input = styled.input`
+  width: 342px;
+  height: 50px;
+  color: white;
+  font-family: Gotham Pro;
+  outline: 0;
+  border: 0;
+  background: transparent;
+`
 
 const SubmitButton = styled.button`  
   width: 342px;
@@ -87,14 +98,33 @@ const Background = styled.div`
   width: 100vw;
   height: 100vh;
   background:linear-gradient(116.82deg, #364F6B 0%, #47688D 100%);
+
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 `
 
+
+const InputField = (props) => {
+  const {img, title, action, dispatch} = props
+  
+  return  <InputBox>
+              <img src={img} style={{marginLeft: '10px'}}/>
+              <Input
+                  placeholder={title}
+                  onChange={ (ev) => {
+                    ev.preventDefault()
+                    dispatch(action(ev.target.value))
+                    }}/>              
+            </InputBox>
+}
 
 
 // "admin@ship.ru"   "secret2"
 
 const LoginPage = () => {
-    
+    console.log('waves after waves:', waves)  
+
     const dispatch = useDispatch()
     const location = useLocation()
     const redirect = useNavigate()
@@ -115,22 +145,17 @@ const LoginPage = () => {
         <form>
         <ColumnContainer>     
             
-            <div>
-              <img src={loginPic} style={{alignSelf: 'center'}}/>
-                <InputLogin
-                placeholder='Логин'
-                onChange={ (event) => {
-                  event.preventDefault()
-                  dispatch(input_username(event.target.value))
-                  }}/>              
-            </div>
+          <InputField
+            img={loginPic}
+            title='Логин'
+            action={input_username} 
+            dispatch={dispatch} />
 
-            <InputLogin 
-              placeholder='Пароль'
-              onChange={ (event) => {
-                event.preventDefault()
-                dispatch(input_password(event.target.value))
-                }}/>
+          <InputField
+            img={lock}
+            title='Пароль'
+            action={input_password} 
+            dispatch={dispatch} />
 
             <SubmitButton
               // TODO: write function from onClick as separate function
