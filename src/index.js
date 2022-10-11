@@ -5,6 +5,9 @@ import App from './components/app';
 
 import { configureStore } from '@reduxjs/toolkit';
 import AppReducer from './slices';
+import { ThemeProvider } from 'styled-components';
+import { theme } from './styles/theme';
+import { GlobalStyles } from './styles/globalStyles';
 
 // app_reducer - will be ~ identifier of this store:  UseSelector(state.app_reducer.propName)
 const store = configureStore({
@@ -19,7 +22,10 @@ const store = configureStore({
   */
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <ThemeProvider theme={theme}>
+      <GlobalStyles />
+      <App />
+    </ThemeProvider>
   </Provider>,
   document.getElementById('root'),
 );

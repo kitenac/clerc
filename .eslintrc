@@ -24,6 +24,8 @@
     "rules": {
         "react/react-in-jsx-scope": "off",
         "react/display-name": 0,
-        "react/no-children-prop": "off"
+        "react/no-children-prop": "off",
+        "no-unused-vars": "off",
+        "react/prop-types": 0
     }
 }
