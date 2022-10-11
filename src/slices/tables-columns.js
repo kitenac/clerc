@@ -1,7 +1,7 @@
 export default {
   characteristic: [
     { key: 'key', value: 'Наименование' },
-    { key: 'value', value: 'Значение в 2022' },
+    { key: 'value', value: 'Значение' },
   ],
   bank_garanty: [
     { key: 'ammount', value: 'Сумма' },

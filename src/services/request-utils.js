@@ -32,7 +32,7 @@ async function login( loginFormData ) {
     try{
         res = await AxiosInstance.post('/auth/login', formdata) }
     catch(err){
-        console.log('error', error) }
+        console.log('error', err) }
                 
     // response struct: https://axios-http.com/docs/res_schema
     return res;

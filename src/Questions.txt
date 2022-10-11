@@ -10,8 +10,6 @@
          
 
    1) Вёрстка деталей контракта:
-      * вроде готов генератор таблицы Table(table) для характеристик судна
-         - разрабатывался, как обобщение CharecteristicsTable
 
       * подготовил стейт:
          - помни, что в стейт кладём только values из table = {anot, values}, 
@@ -29,33 +27,46 @@
 
 TODO:
 
+дисплей-тейбл
+
+// sets state of selected detail and redirects to it`s page
+async function setDetailInfo(ev, detail){ 
+  ev.preventDefault()
+  const charac = await getContractsInfo(apiKey, id, detail)
+  dispatch(add_charecteristic(charac))
+  redirect(`/contracts/${id}/${toKebab(detail)}`)
+} 
+
+
+// Camel ---> Kebab  xD
+const toKebab = (s) =>{
+    // search for upper case('i'), $1 - recived match
+    return s.replace(/([A-Z])/, ($1) => {
+        // lowering match and adding '-'
+        
+        return '-' + $1.toLowerCase()     
+  })   
+  }
+  
+
+ ---- SO IMPORTANTANT -------
+ [!!!] setDetailInfo from contract-card - uneversal info about each of subdetail,
+      BUT due it`s local(to access dispatch and redirect) - it can`t be export
+      So - make separate Object with dispatch and other staff inside - then add setDetailInfo as METHOD
+         and export this method from object!
+
+      NOW - it breaks app!
+ ----------------------------
+
  [!!!] На время убрал редирект с контрактов - вернуть!!
    - код 200 / переход будучи залогиненным(состояние пока не сохраняется)
 
 
 
- [!!!] нужно подумать, как имея группировку по столбцам <Col> - сделать лиинии между ними
-      - в <Row> уже есть красивые границы
-
-   !!! Решение: https://codepen.io/Thiru/pen/bmxvZK
-      - таблица - набор строк, обёрнутых в контейнер
-      - строка - набор элементов-классов
-      
-      контейнер:
-      * {
-       box-sizing: border-box;
-      }
-
-        .wrapper {
-          width: 100%;
-          max-width: 1000px;
-          margin: 1em auto;
-          padding: 1em;
-        }
-
 
    [!!!] ResponsiveTable - used to add scroll-bar near large table
          - meant to be used in each page(contracts, contract details, ...)
+
 
 
  [?!] почему-то useApi(), использующее  AxiosInstance baseurl = http://server.clerc.ru/api/v2.0
@@ -130,9 +141,7 @@ TODO:
  [?] pseodoclasses:
     полезная штука, например, чтоб при наведении на контракт, он подсвечивался 
 
-
-
-
+  
 
 
  ?? --------------- ?? 

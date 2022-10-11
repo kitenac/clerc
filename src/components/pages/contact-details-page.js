@@ -8,7 +8,26 @@ import { useSelector } from 'react-redux';
 
 // пойдёт рядом с шапкой!!!
 const Navbar = () => {
-  const places = [];
+  const places = [
+    'Характеристики судна',
+    'Банковская гарантия',
+    'ФАИП',
+    'Объекты',
+    'Этапы платежей',
+    'Ключевые события',
+    'Претензионная работа',
+    'Судебная работа',
+    'Кассовое исполнение',
+    'Освоение'
+  ];
+  
+  return <div>
+            <Row style={{width: '80%', border: '0', justifyContent: 'end'}}> 
+               {places.map((el) => <Col style={{width: '50%'}}>    <NavFont> {el} </NavFont>   </Col>)} 
+            </Row>
+            <Row style={{width: '100%', marginTop: '-0.5%'}}/>
+         </div>
+
 };
 
 const AnotFont = styled.span`
@@ -28,8 +47,14 @@ const TableFont = styled(AnotFont)`
   color: #333333;
 `;
 
+const NavFont = styled(AnotFont)`
+  white-space: nowrap;
+
+  height: 18px;
+  color: rgba(55, 81, 109, 0.4);
+`
+
 const Row = styled(RowContainer)`
-  gap: 50px;
   padding: 5px;
   width: 100vw;
   justify-content: flex-start;
@@ -39,6 +64,8 @@ const Row = styled(RowContainer)`
   border-left-width: 0;
 `;
 
+
+// width - helps to make pseudo columns(50% - due we have 2 columns)
 const Col = styled(ColumnContainer)`
   justify-content: flex-start;
   align-items: flex-start;
@@ -47,12 +74,6 @@ const Col = styled(ColumnContainer)`
   width: 50%;
 `;
 
-const Line = styled.div`
-  display: absolute;
-  box-sizing: border-box;
-  width: 80vw;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-`;
 
 // white-list(of tags) filter for object(response array)
 const filter_tags = (tags, response_arr) => {
@@ -71,40 +92,18 @@ const filter_tags = (tags, response_arr) => {
 // le kostyl`:
 //  Anot - array of objects with {key, value} poles
 //  key - some key, idx - index of object with such key
-const find_idx = (key, Anot) => {
-  let idx = 0;
-  for (let el of Anot) {
-    if (el.key === key) return idx;
-    idx++;
-  }
-  return -1; // if no match
-};
-
 const Table = ({ table }) => {
   // |values| = n*m => 2 maps
   const { Anot, Vals } = table;
 
   const Anotation = Anot.map((anot) => {
-    return <AnotFont>{!anot.value ? ' — ' : anot.value}</AnotFont>;
+    return <Row style={{ border: '0' }}> 
+                <AnotFont>{!anot.value ? ' — ' : anot.value}</AnotFont> 
+           </Row> 
   });
 
-  let Cols = [];
-  // initing multi-dimentional(dim = Anotation.length) array - colomuns
-  for (let i = 0; i < Anotation.length; ++i) Cols.push([Anotation[i]]);
-
-  // Pushing needed keys from array of objects to columns from Cols
-
-  for (let val of Vals)
-    for (let [key, value] of Object.entries(val)) {
-      const idx = find_idx(key, Anot);
-
-      if (idx !== -1) Cols[idx].push(<TableFont>{!value ? ' — ' : value}</TableFont>);
-    }
-
-  // wrapping each array into column tag
-  Cols = Cols.map((col) => <Col> {col} </Col>);
-
   // Taking needed keys from array of objects
+  // row - consists of columns
   const Lines = Vals.map((val) => {
     return (
       <Row>
@@ -113,7 +112,8 @@ const Table = ({ table }) => {
           return (
             <Col key={anot.id}>
               {' '}
-              <TableFont>{!val[key] ? ' — ' : val[key]}</TableFont>{' '}
+              <TableFont>{!val[key] ? ' — ' : val[key]}</TableFont>
+              {' '}
             </Col>
           );
         })}
@@ -121,33 +121,12 @@ const Table = ({ table }) => {
     );
   });
 
-  /*
-    let Tabl = []
-    for (let i = 0; i < Vals.length; ++i){
-        let Line = []
-        for (let j = 0; j < Cols.length; ++j)
-            Line.push(Cols[i][j])
-        Tabl.push(<Row> {Line} </Row>)
-    }
-    */
-
   return (
     <div>
-      {/*Normal cols:*/}
-      {/*<Row>{Cols}</Row>*/}
-      Normal lines:
+      <Row> {Anotation} </Row> 
       {Lines}
     </div>
   );
-  /*
-    // columns goes in a row
-    return  <table>
-              <Row>
-                {Anotation}
-              </Row>   
-                {Lines} 
-            </table>
-    */
 };
 
 // TODO: сделать тут отображение нужной таблицы в зависимости от текущего урла!!!
@@ -174,6 +153,7 @@ const ContractDetails = () => {
   return (
     <div>
       <Header />
+      <Navbar />
 
       <Table table={testTable} />
     </div>
