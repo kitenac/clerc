@@ -1,4 +1,3 @@
-import Login from './clerc-service'
-import { getApiKey, getContracts } from './request-utils';
+import {login, getApiKey, getContracts } from './request-utils';
 
-export {Login, getApiKey, getContracts};
+export {login, getApiKey, getContracts};

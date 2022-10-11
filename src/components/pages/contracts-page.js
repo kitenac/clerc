@@ -1,23 +1,45 @@
-import React from 'react'
-import { connect } from 'react-redux'
+import React, { Component, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+
+import { useSelector } from 'react-redux'
+import styled from 'styled-components'
 import ContractCard from '../contractCard'
+import Header from '../head'
+import { getContractsInfo } from '../../services/request-utils'
 
-import Head from '../head/head'
+import { ColumnContainer, RowContainer } from '../pages/login-page'
 
-const ContractsPage = ({contractsPageData}) => {
 
+
+const ContractsPage = () => {
+
+    const state = useSelector((state) => state.app_reducer)
+    const {contractsPageData, sessionData} = state
+
+    const redirect = useNavigate()
+
+    // if (!sessionData.isLoginned) return <Navigate to="/login" /> 
+
+    //const contractsPageData = useSelector((state) => state.app_reducer.contractsPageData)
     const Contracts = contractsPageData.map( (contract) => {
                       return  <ContractCard 
-                                  info={contract} 
-                                  onCardSelected={ (id)=>{console.log('chosen contract with id:', id)} }/> })
+                                  key={contract.id}
+                                  info={contract}/> })
 
-    return <div>
-             <Head/>
-             {Contracts}
-           </div> 
+    const Top = Contracts[0]
+    const Body = Contracts.slice(1,Contracts.length)
+    const Bottom = Contracts[Contracts.length]
+
+    return<div>
+            <Header/>
+            <ColumnContainer style={{paddingInlineStart: '5px', gap: '5px', textAlign: 'start'}}>
+              {Top}
+             
+              {Body}
+             
+              {Bottom}
+            </ColumnContainer>
+          </div>
 }
 
-
-const mapStateToProps = (state) => ({contractsPageData : state.contractsPageData})
-
-export default connect(mapStateToProps)(ContractsPage)
+export default ContractsPage
