@@ -6,29 +6,6 @@ import { toCamel, getContractsInfo, toSnake } from '../../services/request-utils
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 
-// пойдёт рядом с шапкой!!!
-const Navbar = () => {
-  const places = [
-    'Характеристики судна',
-    'Банковская гарантия',
-    'ФАИП',
-    'Объекты',
-    'Этапы платежей',
-    'Ключевые события',
-    'Претензионная работа',
-    'Судебная работа',
-    'Кассовое исполнение',
-    'Освоение'
-  ];
-  
-  return <div>
-            <Row style={{width: '80%', border: '0', justifyContent: 'end'}}> 
-               {places.map((el) => <Col style={{width: '50%'}}>    <NavFont> {el} </NavFont>   </Col>)} 
-            </Row>
-            <Row style={{width: '100%', marginTop: '-0.5%'}}/>
-         </div>
-
-};
 
 const AnotFont = styled.span`
   font-family: 'Gotham Pro';
@@ -69,7 +46,7 @@ const Row = styled(RowContainer)`
 const Col = styled(ColumnContainer)`
   justify-content: flex-start;
   align-items: flex-start;
-  column-gap: 50px;
+  
   padding: 10px;
   width: 50%;
 `;
@@ -80,19 +57,78 @@ const filter_tags = (tags, response_arr) => {
   return response_arr.map((el) => Object.fromEntries(tags.map((tag) => [tag, el[tag]]))); // making new objects from key:value pairs
 };
 
-// Table-generator. !!! table = {anot, values}
-// |anot| = n - вручную пишем заголовки
-// |values| = n*m, m - число строк(объектов) - достаём из стейта
 
-// Vals - массив объектов
-// каждый объет - образует строку
-// строка содержит некоторые поля объекта Anot.key
-// Anot: [{key, val}, ...]
 
-// le kostyl`:
-//  Anot - array of objects with {key, value} poles
-//  key - some key, idx - index of object with such key
-const Table = ({ table }) => {
+const NavCol = styled(Col)`
+  border: '0';
+
+`
+
+
+async function ShowSubdetail(ev, options, path){
+  ev.preventDefault()
+  const {dispatch, redirect, apiKey} = options
+  const detail = await getContractsInfo(apiKey, id, 'shipProperties')
+  dispatch(action(detail))
+  redirect(path)
+  return 'I`ll draw fetched table from state soon :)'
+}
+
+
+// пойдёт рядом с шапкой!!!
+const Navbar = ({id}) => {
+  const redirect = useNavigate();
+  const dispatch = useDispatch()
+  const apiKey = useSelector((state) => state.app_reducer.sessionData.apiToken)
+  
+  
+  const places = [
+    ['Характеристики судна', `${id}/ship-properties`],
+    ['Банковская гарантия', `${id}/bank-guarantees`],
+    ['ФАИП', `${id}/limits`],
+    ['Объекты', `${id}/objects`],
+    ['Этапы платежей', `${id}/payment-stages`],
+    ['Ключевые события', `${id}/key-events`],
+    ['Претензионная работа', `${id}/claim-works`],
+    ['Судебная работа', `${id}/judical-works`],
+    ['Кассовое исполнение', `${id}/cash-execution`],
+    ['Освоение', `${id}/developing`]
+  ];
+  
+  TODO: add places[2] as action to be dispatched
+  const options = {dispatch,redirect, apiKey}
+
+  return <div>
+            <Row style={{width: '80%'}}> 
+               {places.map((el) => <NavCol onClick={ (ev) => ShowSubdetail(ev, options, `/contracts/${el[1]}`, el[2]) }>    
+                                      <NavFont> 
+                                        {el[0]} 
+                                      </NavFont>   
+                                   </NavCol>)} 
+            </Row>
+            <Row style={{width: '100%', marginTop: '-0.5%'}}/>
+         </div>
+
+};
+
+
+
+
+
+/* Table-generator. !!! table = {anot, values}
+  |anot| = n - вручную пишем заголовки
+  |values| = n*m, m - число строк(объектов) - достаём из стейта
+  
+  Vals - массив объектов
+  каждый объет - образует строку
+  строка содержит некоторые поля объекта Anot.key
+  Anot: [{key, val}, ...]
+  
+  le kostyl`:
+   Anot - array of objects with {key, value} poles
+  key - some key, idx - index of object with such key */
+
+  const Table = ({ table }) => {
   // |values| = n*m => 2 maps
   const { Anot, Vals } = table;
 
@@ -145,7 +181,7 @@ const ContractDetails = () => {
   const id = crumbs[2];
   const chosenTable = toCamel(crumbs[3]); // must be camelCased
 
-  console.log('chosen ', chosenTable);
+  console.log('chosen: ', chosenTable);
   //getContractsInfo(sessionData.apiToken, id, chosenTable)
   //console.log('fetched data', getContractsInfo(sessionData.apiToken, id, chosenTable))
 
@@ -153,7 +189,7 @@ const ContractDetails = () => {
   return (
     <div>
       <Header />
-      <Navbar />
+      <Navbar id={id}/>
 
       <Table table={testTable} />
     </div>
