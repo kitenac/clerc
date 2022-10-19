@@ -27,36 +27,11 @@
 
 TODO:
 
-дисплей-тейбл
-
-// sets state of selected detail and redirects to it`s page
-async function setDetailInfo(ev, detail){ 
-  ev.preventDefault()
-  const charac = await getContractsInfo(apiKey, id, detail)
-  dispatch(add_charecteristic(charac))
-  redirect(`/contracts/${id}/${toKebab(detail)}`)
-} 
+ дисплей-тейбл
 
 
-// Camel ---> Kebab  xD
-const toKebab = (s) =>{
-    // search for upper case('i'), $1 - recived match
-    return s.replace(/([A-Z])/, ($1) => {
-        // lowering match and adding '-'
-        
-        return '-' + $1.toLowerCase()     
-  })   
-  }
-  
+   detailName in contractDetails - to enable rus names of subdetails 
 
- ---- SO IMPORTANTANT -------
- [!!!] setDetailInfo from contract-card - uneversal info about each of subdetail,
-      BUT due it`s local(to access dispatch and redirect) - it can`t be export
-      So - make separate Object with dispatch and other staff inside - then add setDetailInfo as METHOD
-         and export this method from object!
-
-      NOW - it breaks app!
- ----------------------------
 
  [!!!] На время убрал редирект с контрактов - вернуть!!
    - код 200 / переход будучи залогиненным(состояние пока не сохраняется)

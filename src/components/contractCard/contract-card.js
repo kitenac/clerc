@@ -6,7 +6,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { add_charecteristic } from '../../slices'
+import { set_shipProperties } from '../../slices'
 import { getContractsInfo } from '../../services/request-utils'
 
 const AnotFont = styled.div`
@@ -56,15 +56,18 @@ const Pair = styled.div`
 `
 
 
-// ex: 2018-12-28 00:00:00.000000 ---> 28.12.18
-const transformDateFormat = (date) =>{
-  const parts = date.slice(0, 10).split('-')              // remove exact time from date(actualy zeroes), parse date into parts by '-' symbol 
+// transforming pole date from Date object
+// ex: Date: {date: 2018-12-28 00:00:00.000000 ---> 28.12.18}
+const flaterDate = (Date) =>{
+  if (!Date || !Date.date) return ' — ' 
+
+  const parts = Date.date.slice(0, 10).split('-')              // remove exact time from date(actualy zeroes), parse date into parts by '-' symbol 
   return `${parts[2]}.${parts[1]}.${parts[0].slice(2)}г.` 
 }
 
+
 const transformPriceFormat = (price) =>{
-  if (!price) 
-      return  ' — '
+  if (!price) return  ' — '
 
   // inserting spacebar after each 3 digets of price number. ps cycle may be optimized 
   let i = price.length % 3
@@ -100,13 +103,9 @@ const ContractCard = (props) => {
       program_name} = info
     
 
-    let Date, Deadline, Price
-
-    date !== null ? Date = transformDateFormat(date.date) : Date = ' — '
-    deadline !== null ? Deadline = transformDateFormat(deadline.date) : Deadline = ' — '
-    
-    Price = transformPriceFormat(price)
-    
+    const Date = flaterDate(date)
+    const Deadline = flaterDate(deadline)
+    const Price = transformPriceFormat(price)
 
     const contracts = [['Наименование', name],    
                        ['Номер гос. контракта', number],
@@ -133,7 +132,7 @@ const ContractCard = (props) => {
       <Card key={id} onClick ={ async function(event) { 
             event.preventDefault()
             const charac = await getContractsInfo(apiKey, id, 'shipProperties')
-            dispatch(add_charecteristic(charac))
+            dispatch(set_shipProperties(charac))
             redirect(`/contracts/${id}/ship-properties`)} }>
         {items}    
       </Card>
@@ -144,3 +143,4 @@ const ContractCard = (props) => {
 
 
 export default ContractCard
+export {transformPriceFormat, flaterDate}

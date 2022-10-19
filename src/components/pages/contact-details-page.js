@@ -2,9 +2,36 @@ import { useLocation, useNavigate, Route } from 'react-router-dom';
 
 import Header from '../head';
 import { RowContainer, ColumnContainer } from './login-page';
-import { toCamel, getContractsInfo, toSnake } from '../../services/request-utils';
+import { getContractsInfo, toSnake } from '../../services/request-utils';
 import styled from 'styled-components';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { set_shipProperties,     
+         set_bankGuarantees,            
+         set_limitBudgetaryObligations,
+         set_contractObjects,           
+         set_paymentStages,             
+         set_keyEvents,                 
+         set_claimWorks,                
+         set_judicialWorks,             
+         set_cashExecutions,            
+         set_familiarization  } from '../../slices'
+
+import { flaterDate, transformPriceFormat } from '../contractCard';
+
+// KOSTYL`
+// TODO: devide slices => can import staff bellow from single file as 'actions' without duplicating code
+const actions = [ 
+  set_shipProperties,     
+  set_bankGuarantees,            
+  set_limitBudgetaryObligations,
+  set_contractObjects,           
+  set_paymentStages,             
+  set_keyEvents,                 
+  set_claimWorks,                
+  set_judicialWorks,             
+  set_cashExecutions,            
+  set_familiarization ]
+
 
 
 const AnotFont = styled.span`
@@ -65,44 +92,73 @@ const NavCol = styled(Col)`
 `
 
 
-async function ShowSubdetail(ev, options, path){
-  ev.preventDefault()
-  const {dispatch, redirect, apiKey} = options
-  const detail = await getContractsInfo(apiKey, id, 'shipProperties')
-  dispatch(action(detail))
-  redirect(path)
-  return 'I`ll draw fetched table from state soon :)'
+
+// converting each complex pole of object into simple pole & formating data(prices, time, etc)
+// Alert: complexResponse - must be array of objects which are to be flatten 
+const makeFlatenFormated = (complexResponse) => {
+  let flatResponse = complexResponse
+  const Dates = [
+    'date', 'validity', 'last_modified_date', 'start_date', 
+    'expiration_date_planned', 'expiration_date_real', 
+    'statement_claim_date', 'court_hearing_date', 
+    'payment_date_planned', 'payment_date'
+  ]
+  const Prices = ['amount', 'price', 'amount_paid']
+
+  complexResponse.forEach((complexPole, idx) => {
+
+    for (let Date of Dates)
+        if ( Object.keys(complexPole).includes(Date) )
+           flatResponse[idx][Date] = flaterDate(complexPole[Date])
+
+    for (let Price of Prices)
+        if ( Object.keys(complexPole).includes(Price) )
+           flatResponse[idx][Price] = transformPriceFormat(complexPole[Price])  
+  })
+
+  return flatResponse
 }
+
+
+async function ShowSubdetail(ev, options, path, action){
+  ev.preventDefault()
+
+  console.log('action is', action)
+
+  const parts = path.split('/');
+  const id = parts[2];
+  const {dispatch, redirect, apiKey} = options
+
+  const subDetail = action.type.replace('App/set_', '')
+
+  let info = await getContractsInfo(apiKey, id, subDetail)
+  info = makeFlatenFormated(info)
+
+  dispatch(action(info))
+  redirect(path)
+}
+
+
 
 
 // пойдёт рядом с шапкой!!!
 const Navbar = ({id}) => {
   const redirect = useNavigate();
   const dispatch = useDispatch()
-  const apiKey = useSelector((state) => state.app_reducer.sessionData.apiToken)
+  const apiKey   = useSelector((state) => state.app_reducer.sessionData.apiToken)
+  const places = useSelector((state) => state.app_reducer.contractDetails.table_urls) 
   
-  
-  const places = [
-    ['Характеристики судна', `${id}/ship-properties`],
-    ['Банковская гарантия', `${id}/bank-guarantees`],
-    ['ФАИП', `${id}/limits`],
-    ['Объекты', `${id}/objects`],
-    ['Этапы платежей', `${id}/payment-stages`],
-    ['Ключевые события', `${id}/key-events`],
-    ['Претензионная работа', `${id}/claim-works`],
-    ['Судебная работа', `${id}/judical-works`],
-    ['Кассовое исполнение', `${id}/cash-execution`],
-    ['Освоение', `${id}/developing`]
-  ];
-  
-  TODO: add places[2] as action to be dispatched
-  const options = {dispatch,redirect, apiKey}
+   
+  const options = {dispatch, redirect, apiKey}
+
 
   return <div>
             <Row style={{width: '80%'}}> 
-               {places.map((el) => <NavCol onClick={ (ev) => ShowSubdetail(ev, options, `/contracts/${el[1]}`, el[2]) }>    
+               {places.map((el, idx) => <NavCol onClick={ async function(ev) { 
+                                            return await ShowSubdetail(ev, options,
+                                                         `/contracts/${id}/${el[1]}`, actions[idx])} }>    
                                       <NavFont> 
-                                        {el[0]} 
+                                        {el[2]}  
                                       </NavFont>   
                                    </NavCol>)} 
             </Row>
@@ -110,6 +166,7 @@ const Navbar = ({id}) => {
          </div>
 
 };
+
 
 
 
@@ -168,27 +225,44 @@ const Navbar = ({id}) => {
 // TODO: сделать тут отображение нужной таблицы в зависимости от текущего урла!!!
 const ContractDetails = () => {
   const location = useLocation();
-  const redirect = useNavigate();
-
   const state = useSelector((state) => state.app_reducer);
-  const { sessionData, contractDetails } = state;
-  const { table_cols, charecteristic } = contractDetails;
-
-  const testTable = { Anot: table_cols.characteristic, Vals: charecteristic };
-  console.log('test table:', testTable, 'cols:', table_cols.characteristic);
+  const { sessionData, contractDetails, contractsPageData} = state;
+  const { table_cols, table_urls, ship_properties } = contractDetails;
 
   let crumbs = location.pathname.split('/');
-  const id = crumbs[2];
-  const chosenTable = toCamel(crumbs[3]); // must be camelCased
+  const id = crumbs[2]
+  const url = crumbs[3]  
+
+
+  let chosenTable, detailName
+  for (let el of table_urls)
+      if (el[1] === url){ 
+          chosenTable = el[0]
+          detailName = el[2]
+          break}
+
+
+  const testTable = { Anot: table_cols[chosenTable],
+                      Vals: contractDetails[chosenTable] };
 
   console.log('chosen: ', chosenTable);
-  //getContractsInfo(sessionData.apiToken, id, chosenTable)
-  //console.log('fetched data', getContractsInfo(sessionData.apiToken, id, chosenTable))
 
-  //    <Table table = {chosenTable}/>
+  let idx
+  contractsPageData.forEach( (el, IDX) => {
+    if (el.id === Number(id)){
+        idx = IDX
+        return }
+    })
+  
+  console.log(`${idx}'st el of contractsPageData has id = ${id} - right?`)
+  
+  const breadCrumbs = {
+    contractName: contractsPageData[idx]['number'], 
+    detail: detailName}
+
   return (
     <div>
-      <Header />
+      <Header breadCrumbs={breadCrumbs}/>
       <Navbar id={id}/>
 
       <Table table={testTable} />

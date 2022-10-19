@@ -5,7 +5,8 @@ import axios from 'axios';
 // ideal doc on configuring axios-instance: https://axios-http.com/docs/req_config 
 const AxiosInstance = axios.create({
     baseURL: 'http://server.clerc.ru/api/v2.0',
-    redirect: 'follow'
+    redirect: 'follow',
+
   });
 
 
@@ -71,21 +72,31 @@ async function getContracts(apiKey){
 }
 
 
-
 //  detail - path - MUST be in camelCase !!! - use toCamel bellow
-async function POSTgetContractsInfo(apiKey, id, detail){
+async function getContractsInfo(apiKey, id, detail){
     
+    // this part wasn`t implimented for POST requests, so useing GET \_(o_o)_/
+    if (detail == 'familiarization')
+        return await useAPI(apiKey, `http://server.clerc.ru/api/v2.0/contracts/${id}/${detail}?order=position`)
+    
+        
+
     // 'filter' in POST  - server`s api for accessing SQL 
     const requestOptions = {  
         filter: [
             {
                 column: "contract_id",
+                operator: "=",
                 value: id
             },
         ]
         }
 
-    const headers = {Authorization: apiKey} 
+    // Content-Type needed - bc server needs to know we pass to it JSON encoded data
+    const headers = {
+        Authorization: apiKey,
+        "Content-Type": "application/json"
+    } 
 
     let res
     try{ 
@@ -101,7 +112,7 @@ async function POSTgetContractsInfo(apiKey, id, detail){
 
 
 // requires camelCase - use toCamel bellow
-async function getContractsInfo(apiKey, id, detail){
+async function GETgetContractsInfo(apiKey, id, detail){
     const url = `http://server.clerc.ru/api/v2.0/${detail}?order=position&filter[0][column]=contract_id&filter[0][operator]==&filter[0][value]=${id}`
     return await useAPI(apiKey, url)
 }
@@ -118,7 +129,7 @@ const toCamel = (s) => {
 
 const toSnake = (s) =>  {
     return s.replace(/([-][a-z])/ig, ($1) => {
-      return $1.replace('-', '_')          
+      return  $1.replace('-', '_')          
     })
 }
 

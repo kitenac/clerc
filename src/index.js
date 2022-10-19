@@ -9,6 +9,8 @@ import { ThemeProvider } from 'styled-components';
 import { theme } from './styles/theme';
 import { GlobalStyles } from './styles/globalStyles';
 
+import { gothamRegular, gothamBold } from './fonts';
+
 // app_reducer - will be ~ identifier of this store:  UseSelector(state.app_reducer.propName)
 const store = configureStore({
   reducer: {
@@ -16,14 +18,13 @@ const store = configureStore({
   },
 });
 
-/* 
-    2-nd param - for redux plugin
-    thunk - for accessing redux-store`s data via functions (situated in ./actions due redux paradigm)
-  */
+
 ReactDOM.render(
   <Provider store={store}>
     <ThemeProvider theme={theme}>
       <GlobalStyles />
+      <gothamRegular />
+      <gothamBold />
       <App />
     </ThemeProvider>
   </Provider>,

@@ -10,19 +10,21 @@ const App = () => {
   const defaultRedirect = (isLoginned) =>
     isLoginned ? <Navigate to='/contracts' /> : <Navigate to='/login' />;
 
+  
+  // about ThemeProvider: https://styled-components.com/docs/advanced
   return (
-    <Router>
-      <Routes>
-        <Route exact path='/' element={defaultRedirect(isLoginned)} />
-        <Route exact path='/login' element={<LoginPage />} />
-        <Route exact path='/contracts' element={<ContractsPage />} />
-        <Route exact path='/card' element={<ContractCard />} />
+      <Router>
+        <Routes>
+          <Route exact path='/' element={defaultRedirect(isLoginned)} />
+          <Route exact path='/login' element={<LoginPage />} />
+          <Route exact path='/contracts' element={<ContractsPage />} />
+          <Route exact path='/card' element={<ContractCard />} />
 
-        <Route exact path='/contracts/:id/:category' element={<ContractDetails />} />
+          <Route exact path='/contracts/:id/:category' element={<ContractDetails />} />
 
-        <Route exact path='/test' element={<TestReduxToolkit />} />
-      </Routes>
-    </Router>
+          <Route exact path='/test' element={<TestReduxToolkit />} />
+        </Routes>
+      </Router>
   );
 };
 

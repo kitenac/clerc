@@ -16,6 +16,7 @@ const ContractsPage = () => {
     const state = useSelector((state) => state.app_reducer)
     const {contractsPageData, sessionData} = state
 
+  
     const redirect = useNavigate()
 
     // if (!sessionData.isLoginned) return <Navigate to="/login" /> 

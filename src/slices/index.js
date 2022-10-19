@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import table_cols from './tables-columns'
+import table_urls from './table-urls'
 
 /*
 const dummy_response = {
@@ -55,15 +56,16 @@ const initialState = {
 
   contractDetails:{
       table_cols,
-      charecteristic: [],
-      bank_garanty: [],
-      limits: [],
-      contract_objects: [],
-      payment_stages: [],
-      key_events: [],
-      claim_works: [],
-      judical_works: [], 
-      cash_executions: [],
+      table_urls,
+      shipProperties: [],
+      bankGuarantees: [],
+      limitBudgetaryObligations: [],
+      contractObjects: [],
+      paymentStages: [],
+      keyEvents: [],
+      claimWorks: [],
+      judicialWorks: [],
+      cashExecutions: [],
       familiarization: []
   }
 
@@ -89,18 +91,32 @@ const AppSlice = createSlice({
 
         // contractsPageData:
         add_contracts: (state, action)  =>   {state.contractsPageData.push(...action.payload)},
+        set_contracts: (state, action)  =>   {state.contractsPageData = action.payload},
 
         // contractDetails:
-        add_charecteristic:   (state, action) => {state.contractDetails.charecteristic.push(...action.payload)},
-        add_bank_garanty:     (state, action) => {state.contractDetails.bank_garanty.push(...action.payload)},
-        add_limits:           (state, action) => {state.contractDetails.limits.push(...action.payload)},
-        add_contract_objects: (state, action) => {state.contractDetails.contract_objects.push(...action.payload)},
-        add_payment_stages:   (state, action) => {state.contractDetails.payment_stages.push(...action.payload)},
-        add_key_events:       (state, action) => {state.contractDetails.key_events.push(...action.payload)},
-        add_claim_works:      (state, action) => {state.contractDetails.claim_works.push(...action.payload)},
-        add_judical_works:    (state, action) => {state.contractDetails.judical_works.push(...action.payload)},
-        add_cash_executions:  (state, action) => {state.contractDetails.cash_executions.push(...action.payload)},
-        add_familiarization:  (state, action) => {state.contractDetails.familiarization.push(...action.payload)},
+        add_shipProperties:             (state, action) => {state.contractDetails.shipProperties.push(...action.payload)},
+        add_bankGuarantees:             (state, action) => {state.contractDetails.bankGuarantees.push(...action.payload)},
+        add_limitBudgetaryObligations:  (state, action) => {state.contractDetails.limitBudgetary.push(...action.payload)},
+        add_contractObjects:            (state, action) => {state.contractDetails.contractObjects.push(...action.payload)},
+        add_paymentStages:              (state, action) => {state.contractDetails.paymentStages.push(...action.payload)},
+        add_keyEvents:                  (state, action) => {state.contractDetails.keyEvents.push(...action.payload)},
+        add_claimWorks:                 (state, action) => {state.contractDetails.claimWorks.push(...action.payload)},
+        add_judicialWorks:              (state, action) => {state.contractDetails.judicialWorks.push(...action.payload)},
+        add_cashExecutions:             (state, action) => {state.contractDetails.cashExecutions.push(...action.payload)},
+        add_familiarization:            (state, action) => {state.contractDetails.familiarization.push(...action.payload)},
+
+        set_shipProperties:             (state, action) => {state.contractDetails.shipProperties  = action.payload},
+        set_bankGuarantees:             (state, action) => {state.contractDetails.bankGuarantees  = action.payload},
+        set_limitBudgetaryObligations:  (state, action) => {state.contractDetails.limitBudgetary  = action.payload},
+        set_contractObjects:            (state, action) => {state.contractDetails.contractObjects = action.payload},
+        set_paymentStages:              (state, action) => {state.contractDetails.paymentStages   = action.payload},
+        set_keyEvents:                  (state, action) => {state.contractDetails.keyEvents       = action.payload},
+        set_claimWorks:                 (state, action) => {state.contractDetails.claimWorks      = action.payload},
+        set_judicialWorks:              (state, action) => {state.contractDetails.judicialWorks   = action.payload},
+        set_cashExecutions:             (state, action) => {state.contractDetails.cashExecutions  = action.payload},
+        set_familiarization:            (state, action) => {state.contractDetails.familiarization = action.payload},
+
+        
 
         // sessionData:
         update_token:  (state, action)  =>   {state.sessionData.apiToken = action.payload},
@@ -124,16 +140,27 @@ export const { input_username,
 
                toggle_logined,
               
-               add_charecteristic,
-               add_bank_garanty,
-               add_limits,
-               add_contract_objects,
-               add_payment_stages,
-               add_key_events,
-               add_claim_works,
-               add_judical_works, 
-               add_cash_executions,
-               add_familiarization  } = AppSlice.actions
+               add_shipProperties,     
+               add_bankGuarantees,            
+               add_limitBudgetaryObligations,
+               add_contractObjects,           
+               add_paymentStages,             
+               add_keyEvents,                 
+               add_claimWorks,                
+               add_judicialWorks,             
+               add_cashExecutions,            
+               add_familiarization,
+               
+               set_shipProperties,     
+               set_bankGuarantees,            
+               set_limitBudgetaryObligations,
+               set_contractObjects,           
+               set_paymentStages,             
+               set_keyEvents,                 
+               set_claimWorks,                
+               set_judicialWorks,             
+               set_cashExecutions,            
+               set_familiarization } = AppSlice.actions
 
 // needed in store
 export default AppSlice.reducer
