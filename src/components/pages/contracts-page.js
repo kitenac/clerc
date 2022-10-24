@@ -27,18 +27,11 @@ const ContractsPage = () => {
                                   key={contract.id}
                                   info={contract}/> })
 
-    const Top = Contracts[0]
-    const Body = Contracts.slice(1,Contracts.length)
-    const Bottom = Contracts[Contracts.length]
 
     return<div>
             <Header/>
-            <ColumnContainer style={{paddingInlineStart: '5px', gap: '5px', textAlign: 'start'}}>
-              {Top}
-             
-              {Body}
-             
-              {Bottom}
+            <ColumnContainer style={{paddingInlineStart: '5px', gap: '5px', textAlign: 'start', flexWrap: 'nowrap'}}>
+              {Contracts}
             </ColumnContainer>
           </div>
 }

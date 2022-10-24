@@ -11,6 +11,7 @@ import { GlobalStyles } from './styles/globalStyles';
 
 import { gothamRegular, gothamBold } from './fonts';
 
+
 // app_reducer - will be ~ identifier of this store:  UseSelector(state.app_reducer.propName)
 const store = configureStore({
   reducer: {

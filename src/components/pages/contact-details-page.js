@@ -68,6 +68,13 @@ const Row = styled(RowContainer)`
   border-left-width: 0;
 `;
 
+const TblRow = styled(Row)`
+:hover {
+  background: rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+}
+`
+
 
 // width - helps to make pseudo columns(50% - due we have 2 columns)
 const Col = styled(ColumnContainer)`
@@ -199,7 +206,7 @@ const Navbar = ({id}) => {
   // row - consists of columns
   const Lines = Vals.map((val) => {
     return (
-      <Row>
+      <TblRow>
         {Anot.map((anot) => {
           const key = anot.key;
           return (
@@ -210,7 +217,7 @@ const Navbar = ({id}) => {
             </Col>
           );
         })}
-      </Row>
+      </TblRow>
     );
   });
 

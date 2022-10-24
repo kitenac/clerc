@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { set_shipProperties } from '../../slices'
 import { getContractsInfo } from '../../services/request-utils'
+import { ColumnContainer, RowContainer } from '../pages/login-page'
 
 const AnotFont = styled.div`
   font-family: cursive;
@@ -27,32 +28,31 @@ const Item = styled.div`
   font-size: 14px;
   line-height: 125%;
 
-  margin-left: 0.5rem;
-
   color: #333333;   
 `
 
-const Card = styled.li`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  row-gap: 8px;
-
+const Card = styled.div`
   box-sizing: border-box;
   margin-top: 0.5rem;
   flex-wrap: wrap;
-
-  width: 97vw;
-
+  width: 99vw;
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 10px;
+  
+  :hover {
+    background: rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+  }
 `
 
-const Pair = styled.div`
+
+const CardsContain = styled.div`
+  display: flex;
+  flex-direction: column;
   margin-left: 0.6rem;
-  margin-right: 0.6rem;
   margin-top: 0.7rem;
   margin-bottom:0.5rem;
+  gap: 10px;
 `
 
 
@@ -83,11 +83,40 @@ const transformPriceFormat = (price) =>{
 }
 
 
+
+
+
+
+// generating configurable elements of line
+//   isMiddle helps to manipulate width of particular line (we have 2 width-groups: "middle" and "non-middle") 
+const createLineElement = (pole, elWidth='100%') => {
+  let anot, item
+  if (pole) [anot, item] = pole
+  return <div style={{width: elWidth}}>
+            <AnotFont> { (!anot) ?  ' — ' : anot }: </AnotFont>
+            <Item>     { (!item) ?  ' — ' : item }  </Item>
+          </div>
+}
+
+// wrapping elements into line of configurable wigth
+const wrapElements = (elements, width="100%") =>{
+  return <RowContainer style={{width: width}}>
+           { elements }
+         </RowContainer>
+}
+
+// generating configurable lines
+const createLine = (poles, width="100%", elWidth='100%') => {
+  const elements = Object.values(poles).map(pole => createLineElement(pole, elWidth))
+  return wrapElements(elements, width)         
+}
+
+
+
 const ContractCard = (props) => {
 
     const redirect = useNavigate()
     const dispatch = useDispatch()
-
     const apiKey = useSelector((state) => state.app_reducer.sessionData.apiToken)
 
     const { info, onCardSelected} = props
@@ -102,7 +131,6 @@ const ContractCard = (props) => {
       note,
       program_name} = info
     
-
     const Date = flaterDate(date)
     const Deadline = flaterDate(deadline)
     const Price = transformPriceFormat(price)
@@ -112,21 +140,21 @@ const ContractCard = (props) => {
                        ['Дата подписания контракта', Date],
                        ['Окончание выполнения работ', Deadline],
                        ['Цена контракта',  Price],
-                       ['Наименование программы', program_name],
-                       ['Контрагент', counterpart],
-                       ['Примечание', note]
-                      ]
+                       ['Название программы', program_name],
+                       ['Генподрядчик', counterpart],
+                       ['Примечание', note]]
     
+    const Top = contracts[0]
+    const Body = contracts.slice(1, 5)
+    const preBottom = [createLineElement(contracts[5], '25%'), 
+                       createLineElement(contracts[6], '50%')]
+    const Bottom = contracts[7]
+    let items = []
 
-
-    const items = Object.values(contracts).map((contract) => {
-                  const [anot, item] = contract 
-                  return <Pair>
-                            <AnotFont> {anot}: </AnotFont>
-                            <Item> { (!item) ?  ' — ' : item } </Item>
-                          </Pair> 
-    })
-  
+    items.push(createLine([Top]))
+    items.push(createLine(Body, '40%', '50%'))
+    items.push(wrapElements(preBottom, '80%'))
+    items.push(createLine([Bottom]))
 
     return (
       <Card key={id} onClick ={ async function(event) { 
@@ -134,10 +162,14 @@ const ContractCard = (props) => {
             const charac = await getContractsInfo(apiKey, id, 'shipProperties')
             dispatch(set_shipProperties(charac))
             redirect(`/contracts/${id}/ship-properties`)} }>
-        {items}    
+      
+      <CardsContain>
+        {items}
+      </CardsContain>
+            
       </Card>
     )
-  }
+}
 
 
 

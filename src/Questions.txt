@@ -37,6 +37,9 @@ TODO:
    - код 200 / переход будучи залогиненным(состояние пока не сохраняется)
 
 
+!!!
+  WANTED - CRUD - add/modify/del 
+
 
 
    [!!!] ResponsiveTable - used to add scroll-bar near large table
@@ -65,11 +68,6 @@ TODO:
                         contractDetails.charecteristics
        
  [!!] cделать отображение нужной таблицы в зависимости от текущего урла на contract-dtails-page
-
-
- [+-] BreadCrumbs
-      - useLocation().pathname - и нет проблем
-
       
 
  [??] как одинаковый размер сделать карточкам:

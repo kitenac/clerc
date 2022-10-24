@@ -82,16 +82,27 @@ const LeftSide = ({breadCrumbs}) =>{
             </RowContainer>
 }
 
+
+const HyperImage=styled.img`
+  src: ${({src}) => src};
+  :hover {
+      background: rgba(0, 0, 0, 0.05);
+      color: red;
+      cursor: pointer;
+    }
+  
+`
+
 const RightSide = () =>{
     return <RowContainer style={{gap: '0.25rem'}}>
             <ButtonContainer style={{marginRight: '1.5rem'}}>
                 * buttons *
             </ButtonContainer>
 
-            <img src={waveBorder} width={6} height={50} style={{marginRight: '1rem'}}/>
-            <img src={xlsPic}/>
-            <img src={loginPicNonTransperent}/>     
-            <img src={exit}/>
+            <HyperImage src={waveBorder} width={6} height={50} style={{marginRight: '1rem'}}/>
+            <HyperImage src={xlsPic}/>
+            <HyperImage src={loginPicNonTransperent}/>     
+            <HyperImage src={exit}/>
 
            </RowContainer>
 }
