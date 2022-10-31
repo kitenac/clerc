@@ -63,7 +63,7 @@ const SubmitButton = styled.button`
   width: 342px;
   height: 50px;
 
-  background: #0f75bf;
+  background: ${({ theme }) => theme.backgrounds.blue};
   border-radius: 4px;
   border: 0;
   color: ${({ theme }) => theme.colors.white};

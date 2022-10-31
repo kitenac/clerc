@@ -5,17 +5,27 @@ import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import ContractCard from '../contractCard'
 import Header from '../head'
-import { getContractsInfo } from '../../services/request-utils'
+import { getContractsInfo, AddContract } from '../../services/request-utils'
 
 import { ColumnContainer, RowContainer } from '../pages/login-page'
 
 
 
+const ButtonAdd = styled.button`
+  width: 233px;
+  height: 34px;
+
+  background: ${({ theme }) => theme.backgrounds.hardBlue};
+  border-radius: 4px;
+  border: 0;
+  color: ${({ theme }) => theme.colors.white};
+`
+
 const ContractsPage = () => {
 
     const state = useSelector((state) => state.app_reducer)
     const {contractsPageData, sessionData} = state
-
+    const {apiToken} = sessionData
   
     const redirect = useNavigate()
 
@@ -32,6 +42,16 @@ const ContractsPage = () => {
             <Header/>
             <ColumnContainer style={{paddingInlineStart: '5px', gap: '5px', textAlign: 'start', flexWrap: 'nowrap'}}>
               {Contracts}
+
+      
+              <ButtonAdd
+                 onClick={async function (event){
+                   //event.preventDefault()
+                   await AddContract(apiToken)}  
+              }>
+
+                Добавить новый контракт
+              </ButtonAdd>
             </ColumnContainer>
           </div>
 }

@@ -27,24 +27,44 @@
 
 TODO:
 
- дисплей-тейбл
+
+-About svg problem:
+ clerc solution: store each svg as <svg> tag - made React-component:
+   
+   const someSvg = (color) =>{
+      return <svg>
+                  fill={color}
+                  some svg magic 
+             <svg/>
+   }
 
 
-   detailName in contractDetails - to enable rus names of subdetails 
-
-
- [!!!] На время убрал редирект с контрактов - вернуть!!
-   - код 200 / переход будучи залогиненным(состояние пока не сохраняется)
-
+TODO - make fixed head, footer and body(contains page data)
 
 !!!
-  WANTED - CRUD - add/modify/del 
+ WANTED - CRUD - add/modify/del data => modal architecture: 
 
+------------------------------------------------------------------------
+  Modal architecture: see galerey
+   Modal-window - blocks everything outside itself 
+       
+>>  !!! Table from contract-details - can be modifed to make skeleton for modal
+          - same array of anot:value pairs but <div> --> <input>
+        ContractCard - frame: 
+          - same wrapping pattern
+          - modal window simplier to configurate then table
+          - see /modals folder
+------------------------------------------------------------------------
+
+
+- Global styles are realy useful & easy to use/manage:
+   colors (blue and hardBlue)
+   backgrounds
+   fonts(AnotFont, TblFont, ...)
 
 
    [!!!] ResponsiveTable - used to add scroll-bar near large table
          - meant to be used in each page(contracts, contract details, ...)
-
 
 
  [?!] почему-то useApi(), использующее  AxiosInstance baseurl = http://server.clerc.ru/api/v2.0

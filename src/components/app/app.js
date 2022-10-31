@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { LoginPage, ContractsPage, ContractCard, ContractDetails } from '../pages';
-import TestReduxToolkit from './testReduxToolkit';
+import {Test} from './test';
 import { useSelector } from 'react-redux';
 
 const App = () => {
@@ -22,7 +22,7 @@ const App = () => {
 
           <Route exact path='/contracts/:id/:category' element={<ContractDetails />} />
 
-          <Route exact path='/test' element={<TestReduxToolkit />} />
+          <Route exact path='/test' element={<Test />} />
         </Routes>
       </Router>
   );

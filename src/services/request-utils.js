@@ -3,7 +3,7 @@ import axios from 'axios';
 
 
 // ideal doc on configuring axios-instance: https://axios-http.com/docs/req_config 
-const AxiosInstance = axios.create({
+export const AxiosInstance = axios.create({
     baseURL: 'http://server.clerc.ru/api/v2.0',
     redirect: 'follow',
 
@@ -118,6 +118,35 @@ async function GETgetContractsInfo(apiKey, id, detail){
 }
 
 
+async function AddContract(apiKey){
+    
+    // we ignore "position" pole => serv sets itself
+    const data = {
+        "name": "Новый контракт",
+        "counterpart": "Дубликат контракта",
+        "number": "КИ-777-2077",
+        "price": "1000000.00",
+        "note": "Новая заметка",
+        "deadline": "2021-12-12",
+        "date": "2021-11-12",
+
+        "program_name": "Название программы"
+    }
+
+    const headers = {
+        Authorization: apiKey,
+        "Content-Type": "application/json" }
+    
+    try{ 
+       AxiosInstance.post("contracts", JSON.stringify(data), {headers: headers})
+    }
+    catch(err){
+        console.log('error', err)
+    }
+
+}
+
+
 const toCamel = (s) => {
     // search for a-z starts with '-' ignoring case('i'), $1 - recived match
     return s.replace(/([-][a-z])/ig, ($1) => {
@@ -135,4 +164,4 @@ const toSnake = (s) =>  {
 
 
 
-export {getApiKey, getContracts, getContractsInfo, login, toCamel, toSnake}
+export {getApiKey, getContracts, getContractsInfo, login, toCamel, toSnake, AddContract}

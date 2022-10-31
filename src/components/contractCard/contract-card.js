@@ -88,7 +88,6 @@ const transformPriceFormat = (price) =>{
 
 
 // generating configurable elements of line
-//   isMiddle helps to manipulate width of particular line (we have 2 width-groups: "middle" and "non-middle") 
 const createLineElement = (pole, elWidth='100%') => {
   let anot, item
   if (pole) [anot, item] = pole

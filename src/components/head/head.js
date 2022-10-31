@@ -86,9 +86,11 @@ const LeftSide = ({breadCrumbs}) =>{
 const HyperImage=styled.img`
   src: ${({src}) => src};
   :hover {
-      background: rgba(0, 0, 0, 0.05);
-      color: red;
-      cursor: pointer;
+      svg: {
+        background: rgba(0, 0, 0, 0.05);
+        color: red;
+        cursor: pointer;
+      }
     }
   
 `

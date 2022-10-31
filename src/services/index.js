@@ -1,3 +1,3 @@
-import {login, getApiKey, getContracts } from './request-utils';
+import {login, getApiKey, getContracts, AddContract} from './request-utils';
 
-export {login, getApiKey, getContracts};
+export {login, getApiKey, getContracts, AddContract};
