@@ -118,21 +118,23 @@ async function GETgetContractsInfo(apiKey, id, detail){
 }
 
 
-async function AddContract(apiKey){
+
+
+/*
+ - we ignore "position" pole => serv sets itself
+data: {
+    "name": "Новый контракт",
+    "counterpart": "Дубликат контракта",
+    "number": "КИ-777-2077",
+    "price": "1000000.00",
+    "note": "Новая заметка",
+    "deadline": "2021-12-12",
+    "date": "2021-11-12",
+    "program_name": "Название программы"
+}                                                       */
+
+export async function AddContract(apiKey, data){
     
-    // we ignore "position" pole => serv sets itself
-    const data = {
-        "name": "Новый контракт",
-        "counterpart": "Дубликат контракта",
-        "number": "КИ-777-2077",
-        "price": "1000000.00",
-        "note": "Новая заметка",
-        "deadline": "2021-12-12",
-        "date": "2021-11-12",
-
-        "program_name": "Название программы"
-    }
-
     const headers = {
         Authorization: apiKey,
         "Content-Type": "application/json" }
@@ -164,4 +166,4 @@ const toSnake = (s) =>  {
 
 
 
-export {getApiKey, getContracts, getContractsInfo, login, toCamel, toSnake, AddContract}
+export {getApiKey, getContracts, getContractsInfo, login, toCamel, toSnake}

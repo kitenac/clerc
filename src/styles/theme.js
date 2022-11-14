@@ -13,16 +13,27 @@ export const theme = {
 
   complexFonts:{
     AnotFont: styled.span`
-              font-family: 'Gotham Pro';
-              font-style: normal;
-              font-weight: 550;
-              font-size: 14px;
-              line-height: 125%;
-              width: 100%;
-              text-align: left;
+    font-family: 'Gotham Pro';
+    font-style: normal;
+    font-weight: 550;
+    font-size: 14px;
+    line-height: 125%;
+    width: 100%;
+    text-align: left;
 
-              color: #37516d;
-              `
+    color: #37516d;
+    `,
+    
+    ModalTitle:styled.span`
+    width: 155px;
+    height: 23px;
+    
+    font-family: 'Gotham Pro';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 125%;
+    `
     
     
   }

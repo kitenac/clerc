@@ -164,7 +164,7 @@ const LoginPage = () => {
                 const response = await login(loginFormData);
                 if (response.status >= 200 && response.status < 300) {
                   dispatch(toggle_logined());
-                  redirect('/contracts');
+                  redirect('/test');
                 }
 
                 const responseData = response.data;

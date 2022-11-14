@@ -47,14 +47,35 @@ TODO - make fixed head, footer and body(contains page data)
 ------------------------------------------------------------------------
   Modal architecture: see galerey
    Modal-window - blocks everything outside itself 
-       
->>  !!! Table from contract-details - can be modifed to make skeleton for modal
-          - same array of anot:value pairs but <div> --> <input>
-        ContractCard - frame: 
-          - same wrapping pattern
-          - modal window simplier to configurate then table
-          - see /modals folder
+  
+   +++ Window - done
+   >>> CRUD: - fuck, it(add new) works!!!
+   !!! ISPRAVIT 167 line in login page - /contracts --> /test 
+         state:
+            modalBuffer = {}
+
+         steps of every modal:
+            +++ m_push_buffer()      // some changes/ new data
+            +++ m_vipe_buffer()      // free buffer after use   
+      >>>   --- refresh_page()       // send query to server again about contracts/characteristics/... 
+
+   TODO: 
+    - !!! we use same root "modal_smth_method" to create/modify
+            4 ex: Modal_contract - root 4 Modal_add_contract(), Modal_modify_contract
+        
+    - validate input in needed poles so that serv would "eat" query 
+    - researching how to modify specific pole(s) 
+
+   
+
 ------------------------------------------------------------------------
+ Solve State holding:
+   just use some hook that catches refreshing and give to it whole state 
+   - mb not effective or secure - so watch solving on a net
+
+
+------------------------------------------------------------------------
+
 
 
 - Global styles are realy useful & easy to use/manage:

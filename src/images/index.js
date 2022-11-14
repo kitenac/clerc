@@ -7,5 +7,7 @@ import waveBorder from './wave-border.svg'
 import xlsPic from './xls-pic.svg'
 import exit from './exit.svg'
 import rightArrow from './right-arrow.svg'
+import close from './close.svg'
+import calendar from './calendar.svg'
 
-export {waves, waveLine, waveBorder, xlsPic, loginPic, lock, loginPicNonTransperent, exit, rightArrow}
+export {waves, waveLine, waveBorder, xlsPic, loginPic, lock, loginPicNonTransperent, exit, rightArrow, close, calendar}

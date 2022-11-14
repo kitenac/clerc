@@ -67,7 +67,9 @@ const initialState = {
       judicialWorks: [],
       cashExecutions: [],
       familiarization: []
-  }
+  },
+
+  modalBuffer: {}
 
 }
 
@@ -123,8 +125,11 @@ const AppSlice = createSlice({
         
         // ! Temporary measure: TODO: make some function to check if token is valid
         //   => if it`s true: toggle loggined state  (with rights of authenticated user)
-        toggle_logined:(state, action)  =>   {state.sessionData.isLoginned = ! state.sessionData.isLoginned}
+        toggle_logined:(state, action)  =>   {state.sessionData.isLoginned = ! state.sessionData.isLoginned},
 
+        // modals:
+        m_push_buffer:(state, action)  =>   {state.modalBuffer = {...state.modalBuffer, ...action.payload}},
+        m_vipe_buffer:(state, action)   =>   {state.modalBuffer = {}},
     }
 })
 
@@ -160,7 +165,10 @@ export const { input_username,
                set_claimWorks,                
                set_judicialWorks,             
                set_cashExecutions,            
-               set_familiarization } = AppSlice.actions
+               set_familiarization,
+               m_push_buffer,
+               m_vipe_buffer
+               } = AppSlice.actions
 
 // needed in store
 export default AppSlice.reducer
